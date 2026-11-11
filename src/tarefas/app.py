@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template, request, url_for
 
 from tarefas.models.database import init_db
+from tarefas.models.tarefa import Tarefa
 
 app = Flask(__name__)
 
@@ -11,9 +12,37 @@ with app.app_context():
 def test():
     return 'Servidor online!'
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('base.html', titulo='Minha lista de tarefas')
+
+    if request.method == 'POST':
+        titulo_form = request.form['tituloTarefa'] # casa com o nome do input no form
+        data_conclusao_form = request.form['dataConclusao'] #casa com o nome do input no form
+
+        data_corrigida = data_conclusao_form or None
+        # 'or' nesse caso é um operador de 
+
+        # Instnaciamos uma nova tarefa com os dados recebidos do form
+        tarefa = Tarefa(titulo=titulo_form, data_conclusao=data_corrigida)
+        
+        # Salvamos a tarefa no banco
+        tarefa.salvarTarefa()
+
+        return redirect(url_for('home'))
+
+    tarefas = Tarefa.listarTarefas()
+
+    return render_template(
+        'base.html',
+        titulo_da_pagina='Minha lista de tarefas',
+        tarefas_da_pagina=tarefas
+    )
+
+# Crie uma nova funcionalidade para apagar casa uma das tarefas cadastradas
+@app.route('/delete/<int:id>')
+def apagar_id_especificado(id):
+    # Código aqui
+    pass
 
 if __name__ == '__main__':
     app.run()

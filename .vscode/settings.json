@@ -4,5 +4,6 @@
     },
     "python.terminal.useEnvFile": true,
     "editor.rulers": [70, 80],
-    "files.autoSave": ""
+    "files.autoSave": "afterDelay",
+    "python.analysis.typeCheckingMode": "off"
 }

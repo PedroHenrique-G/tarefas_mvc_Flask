@@ -25,6 +25,27 @@ class Tarefa:
         with Database() as db:
             db.executar(sql, params)
 
+
+    @staticmethod
+    def listarTarefas() -> list:
+        """Retorna uma lista com todas as tarefas cadastradas."""
+
+        sql = '''SELECT id_tarefa, titulo_tarefa, data_conclusao 
+        FROM tarefa LIMIT 100; '''
+
+        with Database() as db:
+            tarefas_banco = db.executar(sql)
+
+        return tarefas_banco if tarefas_banco else []
+
+    
+    @staticmethod
+    def apagarTarefa(id_tarefa):
+
+        sql = """DELETE FROM tarefas WHERE id_tarefas = %s;"""
+        with Database() as db:
+            db.executar(sql)
+
 # Área 51 (testes)
-tarefa = Tarefa('Minha nova tarefa')
-tarefa.salvarTarefa()
+#tarefa = Tarefa('Minha nova tarefa')
+#tarefa.salvarTarefa()
