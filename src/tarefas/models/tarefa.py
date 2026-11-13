@@ -18,10 +18,8 @@ class Tarefa:
         """Salva a tarefa no banco de dados."""
 
         sql = 'INSERT INTO tarefa (titulo_tarefa, data_conclusao) VALUES (%s, %s);'
-        params = (self.titulo, self.data_conclusao) # protege contra SQL Injection
+        params = (self.titulo, self.data_conclusao) 
 
-        # Gerenciador de contexto (with)
-        # Acessa os métodos __enter__e__exit__ da classe
         with Database() as db:
             db.executar(sql, params)
 
@@ -42,9 +40,10 @@ class Tarefa:
     @staticmethod
     def apagarTarefa(id_tarefa):
 
-        sql = """DELETE FROM tarefas WHERE id_tarefas = %s;"""
+        sql = """DELETE FROM tarefa WHERE id_tarefa = %s;"""
+        params = (id_tarefa,)
         with Database() as db:
-            db.executar(sql)
+            db.executar(sql, params)
 
 # Área 51 (testes)
 #tarefa = Tarefa('Minha nova tarefa')

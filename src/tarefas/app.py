@@ -41,8 +41,8 @@ def home():
 # Crie uma nova funcionalidade para apagar casa uma das tarefas cadastradas
 @app.route('/delete/<int:id>')
 def apagar_id_especificado(id):
-    # Código aqui
-    pass
+    Tarefa.apagarTarefa(id)
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run()
