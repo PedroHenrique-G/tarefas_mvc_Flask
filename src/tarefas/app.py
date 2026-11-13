@@ -3,6 +3,7 @@ from flask import Flask, redirect, render_template, request, url_for
 from tarefas.models.database import init_db
 from tarefas.models.tarefa import Tarefa
 
+
 app = Flask(__name__)
 
 with app.app_context():
@@ -16,16 +17,13 @@ def test():
 def home():
 
     if request.method == 'POST':
-        titulo_form = request.form['tituloTarefa'] # casa com o nome do input no form
-        data_conclusao_form = request.form['dataConclusao'] #casa com o nome do input no form
+        titulo_form = request.form['tituloTarefa'] 
+        data_conclusao_form = request.form['dataConclusao'] 
 
         data_corrigida = data_conclusao_form or None
-        # 'or' nesse caso é um operador de 
 
-        # Instnaciamos uma nova tarefa com os dados recebidos do form
         tarefa = Tarefa(titulo=titulo_form, data_conclusao=data_corrigida)
         
-        # Salvamos a tarefa no banco
         tarefa.salvarTarefa()
 
         return redirect(url_for('home'))
@@ -35,14 +33,40 @@ def home():
     return render_template(
         'base.html',
         titulo_da_pagina='Minha lista de tarefas',
-        tarefas_da_pagina=tarefas
+        tarefas_da_pagina=tarefas,
+        tarefa_editar=None
     )
 
-# Crie uma nova funcionalidade para apagar casa uma das tarefas cadastradas
 @app.route('/delete/<int:id>')
 def apagar_id_especificado(id):
     Tarefa.apagarTarefa(id)
     return redirect(url_for('home'))
+
+@app.route('/edit/<int:id>', methods=['GET', 'POST'])
+def editar_id_especificado(id):
+    tarefa = Tarefa.buscarPorId(id)
+
+    if not tarefa:
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        titulo_form = request.form['tituloTarefa']
+        data_conclusao_form = request.form['dataConclusao']
+
+        tarefa.titulo = titulo_form
+        tarefa.data_conclusao = data_conclusao_form or None
+
+        tarefa.atualizarTarefa()
+        return redirect(url_for('home'))
+
+    tarefas = Tarefa.listarTarefas()
+
+    return render_template(
+        'base.html',
+        titulo_da_pagina='Editar tarefa',
+        tarefas_da_pagina=tarefas,
+        tarefa_editar=tarefa
+    )
 
 if __name__ == '__main__':
     app.run()
