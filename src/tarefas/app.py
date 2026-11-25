@@ -8,11 +8,8 @@ app = Flask(__name__)
 
 with app.app_context():
     init_db()
-    
-@app.route('/test')
-def test():
-    return 'Servidor online!'
 
+    
 @app.route('/', methods=['GET', 'POST'])
 def home():
 
@@ -22,7 +19,8 @@ def home():
 
         data_corrigida = data_conclusao_form or None
 
-        tarefa = Tarefa(titulo=titulo_form, data_conclusao=data_corrigida)
+        tarefa = Tarefa(titulo=titulo_form, 
+        data_conclusao=data_corrigida)
         
         tarefa.salvarTarefa()
 

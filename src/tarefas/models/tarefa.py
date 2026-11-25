@@ -18,7 +18,7 @@ class Tarefa:
         """Salva a tarefa no banco de dados."""
 
         sql = 'INSERT INTO tarefa (titulo_tarefa, data_conclusao) VALUES (%s, %s);'
-        params = (self.titulo, self.data_conclusao) # protege contra SQL Injection
+        params = (self.titulo, self.data_conclusao)
 
         with Database() as db:
             db.executar(sql, params)
@@ -48,7 +48,8 @@ class Tarefa:
 
     @staticmethod
     def buscarPorId(id_tarefa):
-        """Carrega uma tarefa do banco na memória (heap), instanciando um objeto Tarefa."""
+        """Carrega uma tarefa do banco na memória (heap), instanciando
+        um objeto Tarefa."""
 
         sql = '''SELECT id_tarefa, titulo_tarefa, data_conclusao 
         FROM tarefa WHERE id_tarefa = %s;'''
@@ -90,7 +91,3 @@ class Tarefa:
 
         with Database() as db:
             db.executar(sql, params)
-
-# Área 51 (testes)
-#tarefa = Tarefa('Minha nova tarefa')
-#tarefa.salvarTarefa()
